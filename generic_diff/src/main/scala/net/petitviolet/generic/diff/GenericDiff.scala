@@ -12,15 +12,19 @@ object GenericDiff {
     def apply(left: HL, right: HL): Seq[Field]
   }
 
-  implicit lazy val hnilDiff: GenericDiff[HNil] = (_, _) => Nil
+  implicit lazy val hnilDiff: GenericDiff[HNil] = new GenericDiff[HNil] {
+    override def apply(left: HNil, right: HNil): Seq[Field] = Nil
+  }
 
   implicit def hlistDiff[S <: Symbol, H, T <: HList](
     implicit wit: Witness.Aux[S],
     gen: Lazy[GenericDiff[T]]
-  ): GenericDiff[FieldType[S, H] :: T] = { (left, right) =>
-    if (left.head == right.head) FieldSame(wit.value) +: gen.value.apply(left.tail, right.tail)
-    else {
-      FieldDiff(wit.value, left.head, right.head) +: gen.value.apply(left.tail, right.tail)
+  ): GenericDiff[FieldType[S, H] :: T] = new GenericDiff[FieldType[S, H] :: T] {
+    override def apply(left: FieldType[S, H] :: T, right: FieldType[S, H] :: T): Seq[Field] = {
+      if (left.head == right.head) FieldSame(wit.value) +: gen.value.apply(left.tail, right.tail)
+      else {
+        FieldDiff(wit.value, left.head, right.head) +: gen.value.apply(left.tail, right.tail)
+      }
     }
   }
 
