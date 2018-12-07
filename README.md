@@ -1,8 +1,12 @@
 # Scala generic diff
 
+[![MavenCentral](https://maven-badges.herokuapp.com/maven-central/net.petitviolet/generic-diff_2.12/badge.svg)](https://maven-badges.herokuapp.com/maven-central/net.petitviolet/generic-diff_2.12)
+
 ## Getting Started
 
-no maven published yet.
+```scala
+libraryDependencies += "net.petitviolet" %% "generic-diff" % "<version>"
+```
 
 ## Example
 
