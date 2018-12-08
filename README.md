@@ -1,6 +1,6 @@
 # Scala generic diff
 
-[![MavenCentral](https://maven-badges.herokuapp.com/maven-central/net.petitviolet/generic-diff_2.12/badge.svg)](https://maven-badges.herokuapp.com/maven-central/net.petitviolet/generic-diff_2.12)
+[![MavenCentral](https://maven-badges.herokuapp.com/maven-central/net.petitviolet/genericdiff_2.12/badge.svg)](https://maven-badges.herokuapp.com/maven-central/net.petitviolet/genericdiff_2.12)
 
 ## Getting Started
 
