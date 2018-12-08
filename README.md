@@ -1,6 +1,7 @@
 # Scala generic diff
 
 [![MavenCentral](https://maven-badges.herokuapp.com/maven-central/net.petitviolet/genericdiff_2.12/badge.svg)](https://maven-badges.herokuapp.com/maven-central/net.petitviolet/genericdiff_2.12)
+ [![CircleCI](https://circleci.com/gh/petitviolet/scala-generic-diff.svg?style=svg)](https://circleci.com/gh/petitviolet/scala-generic-diff)
 
 ## Getting Started
 
