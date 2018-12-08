@@ -20,6 +20,13 @@ lazy val genericDiffRoot = (project in file("."))
 
 lazy val genericDiff = (project in file("generic_diff"))
   .settings(commonSettings("GenericDiff"))
+  .settings(testOptions in Test += Tests.Argument(
+    TestFrameworks.ScalaTest, "-u", {
+      val dir = System.getenv("CI_REPORTS")
+      if(dir == null) "target/reports" else dir
+    })
+  )
+
 
 lazy val example = (project in file("example/"))
   .settings(commonSettings("example"))
