@@ -1,8 +1,9 @@
 package net.petitviolet.generic.diff
+import org.scalatest.prop.GeneratorDrivenPropertyChecks
 import org.scalatest.{ FeatureSpec, Matchers }
 import shapeless.LabelledGeneric
 
-class GenericDiffTest extends FeatureSpec with Matchers {
+class GenericDiffTest extends FeatureSpec with GeneratorDrivenPropertyChecks with Matchers {
   import GenericDiff._
 
   feature("GenericDiff#diff for simple case class") {
@@ -14,10 +15,16 @@ class GenericDiffTest extends FeatureSpec with Matchers {
       diff(Clazz(1, "hello"), Clazz(2, "hello")) shouldBe List(FieldDiff('i, 1, 2), FieldSame('s))
     }
     scenario("not same clazz of s") {
-      diff(Clazz(1, "hello"), Clazz(1, "world")) shouldBe List(FieldSame('i), FieldDiff('s, "hello", "world"))
+      diff(Clazz(1, "hello"), Clazz(1, "world")) shouldBe List(
+        FieldSame('i),
+        FieldDiff('s, "hello", "world")
+      )
     }
     scenario("not same clazz") {
-      diff(Clazz(1, "hello"), Clazz(2, "world")) shouldBe List(FieldDiff('i, 1, 2), FieldDiff('s, "hello", "world"))
+      diff(Clazz(1, "hello"), Clazz(2, "world")) shouldBe List(
+        FieldDiff('i, 1, 2),
+        FieldDiff('s, "hello", "world")
+      )
     }
   }
 
@@ -36,7 +43,7 @@ class GenericDiffTest extends FeatureSpec with Matchers {
 
   feature("GenericDiff#diff for case class include class") {
     class Value[A](val a: A)
-    case class Clazz[A](i:Int, value: Value[A])
+    case class Clazz[A](i: Int, value: Value[A])
 
     scenario("has same instance") {
       val value = new Value[Int](100)
@@ -59,10 +66,10 @@ class GenericDiffTest extends FeatureSpec with Matchers {
     class Value[A](val a: A) {
       override def equals(obj: scala.Any): Boolean = obj match {
         case v: Value[A] => a == v.a
-        case _ => false
+        case _           => false
       }
     }
-    case class Clazz[A](i:Int, value: Value[A])
+    case class Clazz[A](i: Int, value: Value[A])
 
     scenario("has same instance") {
       val value = new Value[Int](100)
@@ -82,7 +89,7 @@ class GenericDiffTest extends FeatureSpec with Matchers {
   }
 
   feature("GenericDiff#diff for class") {
-    import shapeless.{ :: , HNil, Lazy }
+    import shapeless.{ ::, HNil, Lazy }
     class Clazz[A](val elem: A)
     implicit val G: Lazy[LabelledGeneric.Aux[Clazz[Int], Int :: HNil]] = Lazy.apply(
       new LabelledGeneric[Clazz[Int]] {
@@ -95,7 +102,7 @@ class GenericDiffTest extends FeatureSpec with Matchers {
 
     scenario("same instance") {
       val instance = new Clazz[Int](100)
-      diff( instance, instance ) shouldBe List(FieldSame('elem))
+      diff(instance, instance) shouldBe List(FieldSame('elem))
     }
     scenario("not same instance") {
       diff(
@@ -133,6 +140,16 @@ class GenericDiffTest extends FeatureSpec with Matchers {
         User(Id(1), Name("alice")),
         User(Id(2), Name("bob"))
       ) shouldBe List(FieldDiff('id, Id(1), Id(2)), FieldDiff('name, Name("alice"), Name("bob")))
+    }
+  }
+
+  feature("implicit diff and diff") {
+    case class Clazz(i: Int, s: String)
+    scenario("all are same results") {
+      forAll { (i1: Int, s1: String, i2: Int, s2: String) =>
+        val (clazz1, clazz2) = (Clazz(i1, s1), Clazz(i2, s2))
+        (clazz1 diff clazz2) shouldBe diff(clazz1, clazz2)
+      }
     }
   }
 }
