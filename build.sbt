@@ -1,3 +1,5 @@
+val VERSION = "0.2.0"
+
 lazy val commonDependencies = Seq(
   "com.chuusai" %% "shapeless" % "2.3.3",
   "org.scalatest" %% "scalatest" % "3.0.5" % Test,
@@ -7,7 +9,7 @@ lazy val commonDependencies = Seq(
 def commonSettings(projectName: String) = Seq(
   name := projectName,
   organization := "net.petitviolet",
-  version := "0.1.0",
+  version := VERSION,
   scalaVersion := "2.12.8",
   crossScalaVersions := Seq("2.11.11", "2.12.8"),
   libraryDependencies ++= commonDependencies,
