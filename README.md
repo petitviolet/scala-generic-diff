@@ -45,4 +45,4 @@ def main(args: Array[String]): Unit = {
 
 ## LICENSE
 
-[LICENSE](https://github.com/petitviolet/scala-generic-diff/blob/master/LICENSE)
+[Apache-2.0](https://github.com/petitviolet/scala-generic-diff/blob/master/LICENSE)
