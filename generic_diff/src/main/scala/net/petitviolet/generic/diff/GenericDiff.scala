@@ -3,10 +3,32 @@ package net.petitviolet.generic.diff
 import shapeless._
 import shapeless.labelled.FieldType
 
+import scala.language.dynamics
+import scala.language.experimental.macros
+
 object GenericDiff {
-  sealed abstract class Field(name: Symbol)
-  case class FieldSame(name: Symbol) extends Field(name)
-  case class FieldDiff[A](name: Symbol, before: A, after: A) extends Field(name)
+
+  sealed trait Field extends Any {
+    def name: Symbol
+  }
+  case class FieldSame(name: Symbol) extends AnyVal with Field
+  case class FieldDiff[A](name: Symbol, before: A, after: A) extends Field
+
+  case class DiffResult[T](fields: Seq[Field]) extends Dynamic {
+    val (sames: Seq[Field], diffs: Seq[Field]) = fields.partition {
+      case _: FieldSame    => true
+      case _: FieldDiff[_] => false
+    }
+
+    def selectDynamic(name: String): Field = macro GenericDiffMacro.selectDynamic[T]
+
+    private[diff] def field(name: String): Field =
+      fields.find {
+        _.name.name == name
+      } getOrElse {
+        throw new NoSuchElementException(s"field #$name not found.")
+      }
+  }
 
   trait GenericDiff[HL <: HList] {
     def apply(left: HL, right: HL): Seq[Field]
@@ -42,14 +64,14 @@ object GenericDiff {
 
   implicit class Differable[A](val left: A) extends AnyVal {
     def diff[HL <: HList](right: A)(implicit G: LabelledGeneric.Aux[A, HL],
-                                    gen: Lazy[GenericDiff[HL]]): Seq[Field] = {
-      GenericDiff.diff(left, right)
+                                    gen: Lazy[GenericDiff[HL]]): DiffResult[A] = {
+      GenericDiff.diff[A, HL](left, right)
     }
   }
 
   def diff[A, HL <: HList](left: A, right: A)(implicit G: LabelledGeneric.Aux[A, HL],
-                                              gen: Lazy[GenericDiff[HL]]): Seq[Field] = {
-    gen.value.apply(G.to(left), G.to(right))
+                                              gen: Lazy[GenericDiff[HL]]): DiffResult[A] = {
+    DiffResult[A](gen.value.apply(G.to(left), G.to(right)))
   }
 
 }

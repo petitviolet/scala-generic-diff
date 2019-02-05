@@ -10,11 +10,16 @@ object GenericDiffSample {
 
   def main(args: Array[String]): Unit = {
     val userDiff = User(1L, "alice", 20) diff User(2L, "alice", 35)
-    assert(userDiff == List(FieldDiff('id, 1, 2), FieldSame('name), FieldDiff('age, 20, 35)))
+
+    assert(userDiff.fields == List(FieldDiff('id, 1, 2), FieldSame('name), FieldDiff('age, 20, 35)))
+
+    assert(userDiff.name == FieldSame('name))
+    assert(userDiff.age == FieldDiff('age, 20, 35))
+    // userDiff.foo // compile error!
 
     val groupDiff = Group(1, GroupName("tech")) diff Group(2L, GroupName("hoge"))
     assert(
-      groupDiff == List(
+      groupDiff.fields == List(
         FieldDiff('id, 1, 2),
         FieldDiff('name, GroupName("tech"), GroupName("hoge"))
       )
