@@ -6,7 +6,7 @@ object GenericDiffSample {
   private case class GroupName(value: String)
   private case class Group(id: Long, name: GroupName)
 
-  import GenericDiff._
+  import net.petitviolet.generic.diff.GenericDiff._
 
   def main(args: Array[String]): Unit = {
     val userDiff = User(1L, "alice", 20) diff User(2L, "alice", 35)

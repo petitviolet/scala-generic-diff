@@ -13,15 +13,29 @@ libraryDependencies += "net.petitviolet" %% "generic-diff" % "<version>"
 ## Example
 
 ```scala
-import GenericDiff._
+import net.petitviolet.generic.diff.GenericDiff._
+
+case class User(id: Long, name: String, age: Int)
+
+case class GroupName(value: String)
+case class Group(id: Long, name: GroupName)
 
 def main(args: Array[String]): Unit = {
+  // extract difference between 2 objects
   val userDiff = User(1L, "alice", 20) diff User(2L, "alice", 35)
-  assert(userDiff == List(FieldDiff('id, 1, 2), FieldSame('name), FieldDiff('age, 20, 35)))
 
+  // result contains sequence of FieldDiff and FieldSame
+  assert(userDiff.fields == List(FieldDiff('id, 1, 2), FieldSame('name), FieldDiff('age, 20, 35)))
+
+  // dynamic field access
+  assert(userDiff.name == FieldSame('name))
+  assert(userDiff.age == FieldDiff('age, 20, 35))
+  // userDiff.foo // compile error!
+
+  // extract diff from nested objects
   val groupDiff = Group(1, GroupName("tech")) diff Group(2L, GroupName("hoge"))
   assert(
-    groupDiff == List(
+    groupDiff.fields == List(
       FieldDiff('id, 1, 2),
       FieldDiff('name, GroupName("tech"), GroupName("hoge"))
     )
