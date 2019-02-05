@@ -17,19 +17,25 @@ def commonSettings(projectName: String) = Seq(
 
 lazy val genericDiffRoot = (project in file("."))
   .settings(commonSettings("GenericDiffRoot"))
-  .aggregate(genericDiff, example)
+  .aggregate(genericDiffMacro, genericDiff, example)
 
 lazy val genericDiff = (project in file("generic_diff"))
   .settings(commonSettings("GenericDiff"))
-  .settings(testOptions in Test += Tests.Argument(
-    TestFrameworks.ScalaTest, "-u", {
-      val dir = System.getenv("CI_REPORTS")
-      if(dir == null) "target/reports" else dir
-    })
-  )
+  .settings(testOptions in Test += Tests.Argument(TestFrameworks.ScalaTest, "-u", {
+    val dir = System.getenv("CI_REPORTS")
+    if (dir == null) "target/reports" else dir
+  }))
+  .dependsOn(genericDiffMacro)
 
+lazy val genericDiffMacro = (project in file("generic_diff_macro"))
+  .settings(
+    commonSettings("GenericDiffMacro"),
+    libraryDependencies ++= Seq(
+      "org.scala-lang" % "scala-reflect" % scalaVersion.value % "compile",
+      "org.scala-lang" % "scala-compiler" % scalaVersion.value % "optional"
+    )
+  )
 
 lazy val example = (project in file("example/"))
   .settings(commonSettings("example"))
   .dependsOn(genericDiff)
-
