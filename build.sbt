@@ -22,7 +22,7 @@ lazy val genericDiffRoot = (project in file("."))
   .aggregate(genericDiffMacro, genericDiff, example)
 
 lazy val genericDiff = (project in file("generic_diff"))
-  .settings(commonSettings("GenericDiff"))
+  .settings(commonSettings("generic-diff"))
   .settings(testOptions in Test += Tests.Argument(TestFrameworks.ScalaTest, "-u", {
     val dir = System.getenv("CI_REPORTS")
     if (dir == null) "target/reports" else dir
@@ -31,13 +31,13 @@ lazy val genericDiff = (project in file("generic_diff"))
 
 lazy val genericDiffMacro = (project in file("generic_diff_macro"))
   .settings(
-    commonSettings("GenericDiffMacro"),
+    commonSettings("generic-diff-macro"),
     libraryDependencies ++= Seq(
       "org.scala-lang" % "scala-reflect" % scalaVersion.value % "compile",
       "org.scala-lang" % "scala-compiler" % scalaVersion.value % "optional"
     )
   )
 
-lazy val example = (project in file("example/"))
+lazy val example = (project in file("example"))
   .settings(commonSettings("example"))
   .dependsOn(genericDiff)
