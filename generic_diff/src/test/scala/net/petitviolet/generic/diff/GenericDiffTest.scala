@@ -1,4 +1,5 @@
 package net.petitviolet.generic.diff
+
 import org.scalatest.prop.GeneratorDrivenPropertyChecks
 import org.scalatest.{ FeatureSpec, Matchers }
 import shapeless.LabelledGeneric
@@ -98,10 +99,9 @@ class GenericDiffTest extends FeatureSpec with GeneratorDrivenPropertyChecks wit
     class Clazz[A](val elem: A)
     implicit val G: Lazy[LabelledGeneric.Aux[Clazz[Int], Int :: HNil]] = Lazy.apply(
       new LabelledGeneric[Clazz[Int]] {
-        private type HL = Int :: HNil
-        type Repr = HL
-        override def to(t: Clazz[Int]): HL = t.elem :: HNil
-        override def from(r: HL): Clazz[Int] = new Clazz(r.head)
+        type Repr = Int :: HNil
+        override def to(t: Clazz[Int]): Repr = t.elem :: HNil
+        override def from(r: Repr): Clazz[Int] = new Clazz(r.head)
       }
     )
 
@@ -115,7 +115,7 @@ class GenericDiffTest extends FeatureSpec with GeneratorDrivenPropertyChecks wit
         new Clazz[Int](100),
       ).fields shouldBe List(FieldSame('elem))
     }
-    scenario("differrent instance") {
+    scenario("different instance") {
       diff(
         new Clazz[Int](100),
         new Clazz[Int](200),

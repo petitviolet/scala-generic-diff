@@ -4,7 +4,7 @@ import scala.reflect.macros.blackbox
 
 object GenericDiffMacro {
 
-  def selectDynamic[A: c.WeakTypeTag](c: blackbox.Context)(name: c.Tree): c.Tree = {
+  def selectDynamic[A](c: blackbox.Context)(name: c.Tree): c.Tree = {
     import c.universe._
 
     // primary constructor args of type A
@@ -30,6 +30,6 @@ object GenericDiffMacro {
       case _ => ()
     }
 
-    Apply(Select(c.prefix.tree, TermName("field")), List(name))
+    q"""${c.prefix.tree}.field($name)"""
   }
 }

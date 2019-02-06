@@ -15,6 +15,7 @@ object GenericDiff {
   case class FieldDiff[A](name: Symbol, before: A, after: A) extends Field
 
   case class DiffResult[T](fields: Seq[Field]) extends Dynamic {
+
     val (sames: Seq[Field], diffs: Seq[Field]) = fields.partition {
       case _: FieldSame    => true
       case _: FieldDiff[_] => false
@@ -63,6 +64,7 @@ object GenericDiff {
 //  }
 
   implicit class Differable[A](val left: A) extends AnyVal {
+
     def diff[HL <: HList](right: A)(implicit G: LabelledGeneric.Aux[A, HL],
                                     gen: Lazy[GenericDiff[HL]]): DiffResult[A] = {
       GenericDiff.diff[A, HL](left, right)
