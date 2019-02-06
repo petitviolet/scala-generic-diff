@@ -9,10 +9,10 @@ import scala.language.experimental.macros
 object GenericDiff {
 
   sealed trait Field extends Any {
-    def name: Symbol
+    def name: String
   }
-  case class FieldSame(name: Symbol) extends AnyVal with Field
-  case class FieldDiff[A](name: Symbol, before: A, after: A) extends Field
+  case class FieldSame(name: String) extends AnyVal with Field
+  case class FieldDiff[A](name: String, before: A, after: A) extends Field
 
   case class DiffResult[T](fields: Seq[Field]) extends Dynamic {
 
@@ -25,7 +25,7 @@ object GenericDiff {
 
     private[diff] def field(name: String): Field =
       fields.find {
-        _.name.name == name
+        _.name == name
       } getOrElse {
         throw new NoSuchElementException(s"field #$name not found.")
       }
@@ -44,9 +44,10 @@ object GenericDiff {
     gen: Lazy[GenericDiff[T]]
   ): GenericDiff[FieldType[S, H] :: T] = new GenericDiff[FieldType[S, H] :: T] {
     override def apply(left: FieldType[S, H] :: T, right: FieldType[S, H] :: T): Seq[Field] = {
-      if (left.head == right.head) FieldSame(wit.value) +: gen.value.apply(left.tail, right.tail)
+      if (left.head == right.head)
+        FieldSame(wit.value.name) +: gen.value.apply(left.tail, right.tail)
       else {
-        FieldDiff(wit.value, left.head, right.head) +: gen.value.apply(left.tail, right.tail)
+        FieldDiff(wit.value.name, left.head, right.head) +: gen.value.apply(left.tail, right.tail)
       }
     }
   }
