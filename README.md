@@ -1,6 +1,6 @@
 # Scala generic diff
 
-[![MavenCentral](https://maven-badges.herokuapp.com/maven-central/net.petitviolet/genericdiff_2.12/badge.svg)](https://maven-badges.herokuapp.com/maven-central/net.petitviolet/genericdiff_2.12)
+[![MavenCentral](https://maven-badges.herokuapp.com/maven-central/net.petitviolet/generic-diff_2.12/badge.svg)](https://maven-badges.herokuapp.com/maven-central/net.petitviolet/generic-diff_2.12)
  [![CircleCI](https://circleci.com/gh/petitviolet/scala-generic-diff.svg?style=svg)](https://circleci.com/gh/petitviolet/scala-generic-diff)
  [![Coverage Status](https://coveralls.io/repos/github/petitviolet/scala-generic-diff/badge.svg?branch=master)](https://coveralls.io/github/petitviolet/scala-generic-diff?branch=master)
 
