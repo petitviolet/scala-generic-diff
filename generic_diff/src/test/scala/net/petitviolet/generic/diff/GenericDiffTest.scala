@@ -5,7 +5,6 @@ import org.scalatest.{ FeatureSpec, Matchers }
 import shapeless.LabelledGeneric
 
 class GenericDiffTest extends FeatureSpec with GeneratorDrivenPropertyChecks with Matchers {
-  import GenericDiff._
 
   feature("GenericDiff#diff for simple case class") {
     case class Clazz(i: Int, s: String)

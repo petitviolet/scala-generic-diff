@@ -13,7 +13,7 @@ libraryDependencies += "net.petitviolet" %% "generic-diff" % "<version>"
 ## Example
 
 ```scala
-import net.petitviolet.generic.diff.GenericDiff._
+import net.petitviolet.generic.diff._
 
 case class User(id: Long, name: String, age: Int)
 
