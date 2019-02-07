@@ -5,7 +5,6 @@ import shapeless.{ ::, HList, HNil, LabelledGeneric, Lazy, Witness }
 
 package object diff { here =>
 
-
 //  implicit def nestDiff[S <: Symbol, H, T <: HList, U <: HList](
 //    implicit wit: Witness.Aux[S],
 //    G: LabelledGeneric.Aux[H, T],
@@ -21,13 +20,13 @@ package object diff { here =>
   implicit class Differable[A](val left: A) extends AnyVal {
 
     def diff[HL <: HList](right: A)(implicit G: LabelledGeneric.Aux[A, HL],
-      gen: Lazy[GenericDiff[HL]]): DiffResult[A] = {
+                                    gen: Lazy[GenericDiff[HL]]): DiffResult[A] = {
       here.diff[A, HL](left, right)
     }
   }
 
   def diff[A, HL <: HList](left: A, right: A)(implicit G: LabelledGeneric.Aux[A, HL],
-    gen: Lazy[GenericDiff[HL]]): DiffResult[A] = {
+                                              gen: Lazy[GenericDiff[HL]]): DiffResult[A] = {
     DiffResult[A](gen.value.apply(G.to(left), G.to(right)))
   }
 

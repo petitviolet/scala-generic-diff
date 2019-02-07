@@ -14,7 +14,7 @@ case class FieldDiff[A](name: String, before: A, after: A) extends Field
 case class DiffResult[T](fields: Seq[Field]) extends Dynamic {
 
   val (sames: Seq[Field], diffs: Seq[Field]) = fields.partition {
-    case _: FieldSame => true
+    case _: FieldSame    => true
     case _: FieldDiff[_] => false
   }
 
@@ -31,4 +31,3 @@ case class DiffResult[T](fields: Seq[Field]) extends Dynamic {
 trait GenericDiff[HL <: HList] {
   def apply(left: HL, right: HL): Seq[Field]
 }
-
