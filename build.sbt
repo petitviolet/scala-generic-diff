@@ -1,4 +1,4 @@
-val VERSION = "0.3.0"
+val VERSION = "0.4.0"
 
 lazy val commonDependencies = Seq(
   "com.chuusai" %% "shapeless" % "2.3.3",
