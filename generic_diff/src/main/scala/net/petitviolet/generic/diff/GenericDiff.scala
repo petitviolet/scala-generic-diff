@@ -20,7 +20,7 @@ case class DiffResult[T](fields: Seq[Field]) extends Dynamic {
 
   def selectDynamic(name: String): Field = macro GenericDiffMacro.selectDynamic[T]
 
-  private[diff] def field(name: String): Field =
+  def field(name: String): Field =
     fields.find {
       _.name == name
     } getOrElse {
