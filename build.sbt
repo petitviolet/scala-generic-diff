@@ -1,8 +1,8 @@
-val VERSION = "0.4.1"
+val VERSION = "0.5.0-RC2"
 
 lazy val commonDependencies = Seq(
   "com.chuusai" %% "shapeless" % "2.3.3",
-  "org.scalatest" %% "scalatest" % "3.0.5" % Test,
+  "org.scalatest" %% "scalatest" % "3.1.0-SNAP11" % Test,
   "org.scalacheck" %% "scalacheck" % "1.14.0" % Test
 )
 
@@ -10,8 +10,8 @@ def commonSettings(projectName: String) = Seq(
   name := projectName,
   organization := "net.petitviolet",
   version := VERSION,
-  scalaVersion := "2.12.8",
-  crossScalaVersions := Seq("2.11.11", "2.12.8"),
+  scalaVersion := "2.13.0-RC2",
+  crossScalaVersions := Seq("2.11.11", "2.12.8", scalaVersion.value),
   libraryDependencies ++= commonDependencies,
   scalafmtOnCompile := true,
   scalafmtSbtCheck := true,
