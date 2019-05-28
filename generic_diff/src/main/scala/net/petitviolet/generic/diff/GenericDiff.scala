@@ -18,6 +18,8 @@ case class DiffResult[T](fields: Seq[Field]) extends Dynamic {
     case _: FieldDiff[_] => false
   }
 
+  val hasDiff: Boolean = diffs.nonEmpty
+
   def selectDynamic(name: String): Field = macro GenericDiffMacro.selectDynamic[T]
 
   def field(name: String): Field =

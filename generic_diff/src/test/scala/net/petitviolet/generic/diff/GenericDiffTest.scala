@@ -1,8 +1,8 @@
 package net.petitviolet.generic.diff
 
+import org.scalatest.Matchers
 import org.scalatest.featurespec.AnyFeatureSpec
 import org.scalatest.prop.GeneratorDrivenPropertyChecks
-import org.scalatest.{ FeatureSpec, Matchers }
 import shapeless.LabelledGeneric
 
 class GenericDiffTest extends AnyFeatureSpec with GeneratorDrivenPropertyChecks with Matchers {
@@ -34,8 +34,18 @@ class GenericDiffTest extends AnyFeatureSpec with GeneratorDrivenPropertyChecks 
       )
     }
   }
+  Feature("DiffResult#hasDiff") {
+    case class Clazz(i: Int, s: String)
 
-  feature("GenericDiff#diff for simple case class has a collection") {
+    Scenario("same clazz") {
+      diff(Clazz(1, "hello"), Clazz(1, "hello")).hasDiff shouldBe false
+    }
+    Scenario("not same clazz of i") {
+      diff(Clazz(1, "hello"), Clazz(2, "hello")).hasDiff shouldBe true
+    }
+  }
+
+  Feature("GenericDiff#diff for simple case class has a collection") {
     case class Clazz[A](list: Seq[A])
     Scenario("same clazz") {
       diff(Clazz(List(1)), Clazz(List(1))).fields shouldBe List(FieldSame("list"))
@@ -50,7 +60,7 @@ class GenericDiffTest extends AnyFeatureSpec with GeneratorDrivenPropertyChecks 
     }
   }
 
-  feature("GenericDiff#diff for case class include class") {
+  Feature("GenericDiff#diff for case class include class") {
     class Value[A](val a: A)
     case class Clazz[A](i: Int, value: Value[A])
 
@@ -71,7 +81,7 @@ class GenericDiffTest extends AnyFeatureSpec with GeneratorDrivenPropertyChecks 
     }
   }
 
-  feature("GenericDiff#diff for case class include class with custom equals") {
+  Feature("GenericDiff#diff for case class include class with custom equals") {
     class Value[A](val a: A) {
       override def equals(obj: scala.Any): Boolean = obj match {
         case v: Value[A] => a == v.a
@@ -97,7 +107,7 @@ class GenericDiffTest extends AnyFeatureSpec with GeneratorDrivenPropertyChecks 
     }
   }
 
-  feature("GenericDiff#diff for class") {
+  Feature("GenericDiff#diff for class") {
     import shapeless.{ ::, HNil, Lazy }
     class Clazz[A](val elem: A)
     implicit val G: Lazy[LabelledGeneric.Aux[Clazz[Int], Int :: HNil]] = Lazy.apply(
@@ -126,7 +136,7 @@ class GenericDiffTest extends AnyFeatureSpec with GeneratorDrivenPropertyChecks 
     }
   }
 
-  feature("GenericDiff#diff for nested case class") {
+  Feature("GenericDiff#diff for nested case class") {
     case class Id(value: Int)
     case class Name(value: String)
     case class User(id: Id, name: Name)
