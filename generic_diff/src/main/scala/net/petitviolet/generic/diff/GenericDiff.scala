@@ -8,13 +8,13 @@ import scala.language.experimental.macros
 sealed trait Field extends Any {
   def name: String
 }
-case class FieldSame(name: String) extends AnyVal with Field
+case class FieldSame[A](name: String, value: A) extends Field
 case class FieldDiff[A](name: String, before: A, after: A) extends Field
 
 case class DiffResult[T](fields: Seq[Field]) extends Dynamic {
 
   val (sames: Seq[Field], diffs: Seq[Field]) = fields.partition {
-    case _: FieldSame    => true
+    case _: FieldSame[_] => true
     case _: FieldDiff[_] => false
   }
 

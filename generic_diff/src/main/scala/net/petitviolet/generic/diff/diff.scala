@@ -40,7 +40,7 @@ package object diff { here =>
   ): GenericDiff[FieldType[S, H] :: T] = new GenericDiff[FieldType[S, H] :: T] {
     override def apply(left: FieldType[S, H] :: T, right: FieldType[S, H] :: T): Seq[Field] = {
       if (left.head == right.head)
-        FieldSame(wit.value.name) +: gen.value.apply(left.tail, right.tail)
+        FieldSame(wit.value.name, left.head) +: gen.value.apply(left.tail, right.tail)
       else {
         FieldDiff(wit.value.name, left.head, right.head) +: gen.value.apply(left.tail, right.tail)
       }

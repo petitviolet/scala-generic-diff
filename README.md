@@ -25,7 +25,7 @@ def main(args: Array[String]): Unit = {
   val userDiff = User(1L, "alice", 20) diff User(2L, "alice", 35)
 
   // result contains sequence of FieldDiff and FieldSame
-  assert(userDiff.fields == List(FieldDiff("id", 1, 2), FieldSame("name"), FieldDiff("age", 20, 35)))
+  assert(userDiff.fields == List(FieldDiff("id", 1, 2), FieldSame("name", "alice"), FieldDiff("age", 20, 35)))
 
   // dynamic field access
   assert(userDiff.name == FieldSame("name"))
@@ -41,6 +41,13 @@ def main(args: Array[String]): Unit = {
     )
   )
 }
+```
+
+## Publish
+
+```console
+sbt 'project genericDiffMacro' +publishSigned sonatypeReleaseAll \
+    'project genericDiff' +publishSigned sonatypeReleaseAll
 ```
 
 ## LICENSE

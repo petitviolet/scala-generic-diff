@@ -11,19 +11,19 @@ class GenericDiffTest extends AnyFeatureSpec with GeneratorDrivenPropertyChecks 
     case class Clazz(i: Int, s: String)
     Scenario("same clazz") {
       diff(Clazz(1, "hello"), Clazz(1, "hello")).fields shouldBe List(
-        FieldSame("i"),
-        FieldSame("s")
+        FieldSame("i", 1),
+        FieldSame("s", "hello")
       )
     }
     Scenario("not same clazz of i") {
       diff(Clazz(1, "hello"), Clazz(2, "hello")).fields shouldBe List(
         FieldDiff("i", 1, 2),
-        FieldSame("s")
+        FieldSame("s", "hello")
       )
     }
     Scenario("not same clazz of s") {
       diff(Clazz(1, "hello"), Clazz(1, "world")).fields shouldBe List(
-        FieldSame("i"),
+        FieldSame("i", 1),
         FieldDiff("s", "hello", "world")
       )
     }
@@ -48,7 +48,7 @@ class GenericDiffTest extends AnyFeatureSpec with GeneratorDrivenPropertyChecks 
   Feature("GenericDiff#diff for simple case class has a collection") {
     case class Clazz[A](list: Seq[A])
     Scenario("same clazz") {
-      diff(Clazz(List(1)), Clazz(List(1))).fields shouldBe List(FieldSame("list"))
+      diff(Clazz(List(1)), Clazz(List(1))).fields shouldBe List(FieldSame("list", List(1)))
     }
     Scenario("not same clazz of list elements") {
       diff(Clazz(List(1)), Clazz(List(1, 2))).fields shouldBe List(
@@ -56,7 +56,7 @@ class GenericDiffTest extends AnyFeatureSpec with GeneratorDrivenPropertyChecks 
       )
     }
     Scenario("not same clazz of list type") {
-      diff(Clazz(List(1)), Clazz(Vector(1))).fields shouldBe List(FieldSame("list"))
+      diff(Clazz(List(1)), Clazz(Vector(1))).fields shouldBe List(FieldSame("list", List(1)))
     }
   }
 
@@ -69,7 +69,7 @@ class GenericDiffTest extends AnyFeatureSpec with GeneratorDrivenPropertyChecks 
       diff(
         Clazz(1, value),
         Clazz(1, value)
-      ).fields shouldBe List(FieldSame("i"), FieldSame("value"))
+      ).fields shouldBe List(FieldSame("i", 1), FieldSame("value", value))
     }
     Scenario("has not same instance") {
       val value1 = new Value[Int](100)
@@ -77,7 +77,7 @@ class GenericDiffTest extends AnyFeatureSpec with GeneratorDrivenPropertyChecks 
       diff(
         Clazz(1, value1),
         Clazz(1, value2)
-      ).fields shouldBe List(FieldSame("i"), FieldDiff("value", value1, value2))
+      ).fields shouldBe List(FieldSame("i", 1), FieldDiff("value", value1, value2))
     }
   }
 
@@ -95,7 +95,7 @@ class GenericDiffTest extends AnyFeatureSpec with GeneratorDrivenPropertyChecks 
       diff(
         Clazz(1, value),
         Clazz(1, value)
-      ).fields shouldBe List(FieldSame("i"), FieldSame("value"))
+      ).fields shouldBe List(FieldSame("i", 1), FieldSame("value", value))
     }
     Scenario("has not same instance") {
       val value1 = new Value[Int](100)
@@ -103,7 +103,7 @@ class GenericDiffTest extends AnyFeatureSpec with GeneratorDrivenPropertyChecks 
       diff(
         Clazz(1, value1),
         Clazz(1, value2)
-      ).fields shouldBe List(FieldSame("i"), FieldSame("value"))
+      ).fields shouldBe List(FieldSame("i", 1), FieldSame("value", value1))
     }
   }
 
@@ -120,14 +120,16 @@ class GenericDiffTest extends AnyFeatureSpec with GeneratorDrivenPropertyChecks 
 
     Scenario("same instance") {
       val instance = new Clazz[Int](100)
-      diff(instance, instance).fields shouldBe List(FieldSame("elem"))
+      diff(instance, instance).fields shouldBe List(FieldSame("elem", instance.elem))
     }
+
     Scenario("not same instance") {
       diff(
         new Clazz[Int](100),
         new Clazz[Int](100),
-      ).fields shouldBe List(FieldSame("elem"))
+      ).fields shouldBe List(FieldSame("elem", 100))
     }
+
     Scenario("different instance") {
       diff(
         new Clazz[Int](100),
@@ -145,13 +147,13 @@ class GenericDiffTest extends AnyFeatureSpec with GeneratorDrivenPropertyChecks 
       diff(
         User(Id(1), Name("alice")),
         User(Id(1), Name("alice"))
-      ).fields shouldBe List(FieldSame("id"), FieldSame("name"))
+      ).fields shouldBe List(FieldSame("id", Id(1)), FieldSame("name", Name("alice")))
     }
     Scenario("not same User of id") {
       diff(
         User(Id(1), Name("alice")),
         User(Id(2), Name("alice"))
-      ).fields shouldBe List(FieldDiff("id", Id(1), Id(2)), FieldSame("name"))
+      ).fields shouldBe List(FieldDiff("id", Id(1), Id(2)), FieldSame("name", Name("alice")))
     }
     Scenario("not same User of id and name") {
       diff(
@@ -177,16 +179,19 @@ class GenericDiffTest extends AnyFeatureSpec with GeneratorDrivenPropertyChecks 
     }
 
     Scenario("sames with no diff") {
-      diff(Clazz(1, "hello"), Clazz(1, "hello")).sames shouldBe List(FieldSame("i"), FieldSame("s"))
+      diff(Clazz(1, "hello"), Clazz(1, "hello")).sames shouldBe List(
+        FieldSame("i", 1),
+        FieldSame("s", "hello")
+      )
     }
 
     Scenario("sames with diff") {
-      diff(Clazz(1, "hello"), Clazz(1, "world")).sames shouldBe List(FieldSame("i"))
+      diff(Clazz(1, "hello"), Clazz(1, "world")).sames shouldBe List(FieldSame("i", 1))
     }
 
     Scenario("access with field name") {
       val diffResults = diff(Clazz(1, "hello"), Clazz(1, "world"))
-      diffResults.i shouldBe FieldSame("i")
+      diffResults.i shouldBe FieldSame("i", 1)
       diffResults.s shouldBe FieldDiff("s", "hello", "world")
     }
   }
