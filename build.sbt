@@ -1,4 +1,4 @@
-val libraryVersion = "0.5.0-RC2"
+val libraryVersion = "0.5.1-RC2"
 val libraryName = "generic-diff"
 
 lazy val commonDependencies = Seq(
@@ -43,5 +43,5 @@ lazy val example = (project in file("example"))
   .settings(commonSettings("example"))
 //  .dependsOn(genericDiff)
   .settings(
-    libraryDependencies += organization.value %% libraryName % libraryVersion 
+    libraryDependencies += organization.value %% libraryName % libraryVersion
   )
