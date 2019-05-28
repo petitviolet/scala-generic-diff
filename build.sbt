@@ -1,4 +1,5 @@
-val VERSION = "0.5.0-RC2"
+val libraryVersion = "0.5.0-RC2"
+val libraryName = "generic-diff"
 
 lazy val commonDependencies = Seq(
   "com.chuusai" %% "shapeless" % "2.3.3",
@@ -9,7 +10,7 @@ lazy val commonDependencies = Seq(
 def commonSettings(projectName: String) = Seq(
   name := projectName,
   organization := "net.petitviolet",
-  version := VERSION,
+  version := libraryVersion,
   scalaVersion := "2.13.0-RC2",
   crossScalaVersions := Seq("2.11.11", "2.12.8", scalaVersion.value),
   libraryDependencies ++= commonDependencies,
@@ -22,7 +23,7 @@ lazy val genericDiffRoot = (project in file("."))
   .aggregate(genericDiffMacro, genericDiff, example)
 
 lazy val genericDiff = (project in file("generic_diff"))
-  .settings(commonSettings("generic-diff"))
+  .settings(commonSettings(libraryName))
   .settings(testOptions in Test += Tests.Argument(TestFrameworks.ScalaTest, "-u", {
     val dir = System.getenv("CI_REPORTS")
     if (dir == null) "target/reports" else dir
@@ -40,4 +41,7 @@ lazy val genericDiffMacro = (project in file("generic_diff_macro"))
 
 lazy val example = (project in file("example"))
   .settings(commonSettings("example"))
-  .dependsOn(genericDiff)
+//  .dependsOn(genericDiff)
+  .settings(
+    libraryDependencies += organization.value %% libraryName % libraryVersion 
+  )
