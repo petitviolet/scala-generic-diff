@@ -28,7 +28,7 @@ def main(args: Array[String]): Unit = {
   assert(userDiff.fields == List(FieldDiff("id", 1, 2), FieldSame("name", "alice"), FieldDiff("age", 20, 35)))
 
   // dynamic field access
-  assert(userDiff.name == FieldSame("name"))
+  assert(userDiff.name == FieldSame("name", "alice"))
   assert(userDiff.age == FieldDiff("age", 20, 35))
   // userDiff.foo // compile error!
 
