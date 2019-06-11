@@ -1,9 +1,9 @@
-val libraryVersion = "0.6.0-RC2"
+val libraryVersion = "0.6.0"
 val libraryName = "generic-diff"
 
 lazy val commonDependencies = Seq(
   "com.chuusai" %% "shapeless" % "2.3.3",
-  "org.scalatest" %% "scalatest" % "3.1.0-SNAP11" % Test,
+  "org.scalatest" %% "scalatest" % "3.1.0-SNAP13" % Test,
   "org.scalacheck" %% "scalacheck" % "1.14.0" % Test
 )
 
@@ -11,7 +11,7 @@ def commonSettings(projectName: String) = Seq(
   name := projectName,
   organization := "net.petitviolet",
   version := libraryVersion,
-  scalaVersion := "2.13.0-RC2",
+  scalaVersion := "2.13.0",
   crossScalaVersions := Seq("2.11.11", "2.12.8", scalaVersion.value),
   libraryDependencies ++= commonDependencies,
   scalafmtOnCompile := true,
@@ -42,6 +42,6 @@ lazy val genericDiffMacro = (project in file("generic_diff_macro"))
 lazy val example = (project in file("example"))
   .settings(commonSettings("example"))
   .dependsOn(genericDiff)
-//  .settings(
-//    libraryDependencies += organization.value %% libraryName % libraryVersion
-//  )
+  // .settings(
+  //   libraryDependencies += organization.value %% libraryName % libraryVersion
+  // )

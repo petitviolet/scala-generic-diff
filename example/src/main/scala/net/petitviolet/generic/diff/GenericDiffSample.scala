@@ -10,7 +10,11 @@ object GenericDiffSample {
     val userDiff = User(1L, "alice", 20) diff User(2L, "alice", 35)
 
     assert(
-      userDiff.fields == List(FieldDiff("id", 1, 2), FieldSame("name", "alice"), FieldDiff("age", 20, 35))
+      userDiff.fields == List(
+        FieldDiff("id", 1, 2),
+        FieldSame("name", "alice"),
+        FieldDiff("age", 20, 35)
+      )
     )
 
     assert(userDiff.name == FieldSame("name", "alice"))
