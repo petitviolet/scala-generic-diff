@@ -1,8 +1,26 @@
-# Scala generic diff
+# Extract diff between objects
 
 [![MavenCentral](https://maven-badges.herokuapp.com/maven-central/net.petitviolet/generic-diff_2.12/badge.svg)](https://maven-badges.herokuapp.com/maven-central/net.petitviolet/generic-diff_2.12)
  [![CircleCI](https://circleci.com/gh/petitviolet/scala-generic-diff.svg?style=svg)](https://circleci.com/gh/petitviolet/scala-generic-diff)
  [![Coverage Status](https://coveralls.io/repos/github/petitviolet/scala-generic-diff/badge.svg?branch=master)](https://coveralls.io/github/petitviolet/scala-generic-diff?branch=master)
+
+A Scala library to extract differences between two objects.
+This makes easy finding out what changes are applied on the old object.
+
+Quick example:
+
+```scala
+// Using Ammonite-REPL
+@ import $ivy.`net.petitviolet::generic-diff:<VERSION>`
+@ import net.petitviolet.generic.diff._
+...
+
+@ case class User(id: Long, name: String)
+defined class User
+
+@ User(1L, "alice") diff User(1L, "bob")
+res2: DiffResult[User] = DiffResult(List(FieldSame("id", 1L), FieldDiff("name", "alice", "bob")))
+```
 
 ## Getting Started
 
